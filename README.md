@@ -10,7 +10,7 @@
 
 ## 2. Bank
 
-```json
+```typescript
 {
   "bank": [
     {
@@ -28,7 +28,7 @@
 
 ## 2. Lot of Lottery
 
-```json
+```typescript
 {
   "lot": [
     {
@@ -46,7 +46,7 @@
 
 ## 3. Shop
 
-```json
+```typescript
 {
   "shop": [
     {
@@ -102,7 +102,7 @@
 
 ## 4. Quota of shop (Transaction)
 
-```json
+```typescript
 {
   "transactionQuota": [
     {
@@ -131,7 +131,7 @@
 
 <!-- Import lottery: How do you tracking ? -->
 
-```json
+```typescript
 {
   "lottery": [
     {
@@ -183,7 +183,7 @@
 
       "getMoney": {
         "getType": true, // เลือกวิธีรับรางวัล- true: รับด้วยตนเองที่บริษัท, false: รับโดยวิธีการโอน (fee 2%)
-        /*  
+        /*
         + isPaidStatus (รับโดยวิธีการโอน)
           - รอดำเนินการ
           - กรอกข้อมูลแล้ว
@@ -214,7 +214,7 @@
 
 ## 4. Cart
 
-```json
+```typescript
 {
   "cart": [
     {
@@ -280,7 +280,7 @@
 
 ## 5. Order of lottery (Transaction)
 
-```json
+```typescript
 {
   "transactionOrder": [
     {
@@ -347,7 +347,7 @@
 
 ## 2. Users
 
-```json
+```typescript
 {
   "phoneNumber": "0962963233", // PK
   "bankCompanyAbbreviation": "KBANK",
@@ -385,7 +385,7 @@
 
 ## 4. Complain
 
-```json
+```typescript
 {
   "listComplain": [
     {
@@ -416,7 +416,7 @@
 
 ## 3. Permission (User Role)
 
-```json
+```typescript
 {
   // Role Shop
   "userRole": [
@@ -439,7 +439,7 @@
 
 ## 1. Admin
 
-```json
+```typescript
 {
   "userID": "user01",
   "username": "0962963233",
@@ -451,18 +451,21 @@
 
 ## 5. Lottery can get reward
 
-```json
-{}
+```typescript
+{
+}
 ```
 
 ## 5. Reward
 
-```json
-{}
+```typescript
+{
+}
 ```
 
 ## 6. Commission
 
-```json
-{}
+```typescript
+{
+}
 ```
