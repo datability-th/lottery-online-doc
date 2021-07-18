@@ -355,7 +355,7 @@
   "name": "ภราดร",
   "surname": "ศรีชาพันธุ์",
   "roleType": "ลูกค้า", // ลูกค้า / ตัวแทน / admin
-  "roleClass": "ลูกค้า", // ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว
+  "roleClass": "ลูกค้า", // ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
 
   "shopFriend": [
     {
@@ -368,6 +368,16 @@
     }
     // ...
   ],
+
+  "permissionAdmin": {
+    "delegator": false, // ตัวแทน
+    "importLottery": false, // สลาก
+    "financeReport": false, // การเงิน
+    "contentMarketing": false, // สื่อสาร
+    "report": false, // รายงาน
+    "createAdmin": false // สร้างผู้ดูแล
+  },
+
   "createdAt": "2021-07-16T10:13:32+00:00",
   "updatedAt": "2021-07-16T10:13:32+00:00"
 }
@@ -404,6 +414,25 @@
 }
 ```
 
+## 3. Permission (User Role)
+
+```json
+{
+  // Role Shop
+  "userRole": [
+    {
+      "nameRole": "ลูกค้า" // PK
+    },
+    {
+      "nameRole": "ตัวแทน" // PK
+    },
+    {
+      "nameRole": "admin" // PK
+    }
+  ]
+}
+```
+
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------- -->
 
 # Back Office
@@ -417,75 +446,6 @@
   "password": "KBANK",
   "name": "ภราดร",
   "surname": "ศรีชาพันธุ์"
-}
-```
-
-## 3. User Role
-
-```json
-{
-  // Role Shop
-  "roleShop": [
-    {
-      "nameRole": "ยี่ปั้ว", // PK
-      "permission": {
-        "delegator": true, // ตัวแทน
-        "importLottery": true, // สลาก
-        "financeReport": true, // การเงิน
-        "contentMarketing": true, // สื่อสาร
-        "report": true, // รายงาน
-        "createAdmin": true // สร้างผู้ดูแล
-      }
-    },
-    {
-      "nameRole": "ซาปั้ว",
-      "permission": {
-        "delegator": true, // ตัวแทน
-        "importLottery": true, // สลาก
-        "financeReport": true, // การเงิน
-        "contentMarketing": true, // สื่อสาร
-        "report": true, // รายงาน
-        "createAdmin": true // สร้างผู้ดูแล
-      }
-    },
-    {
-      "nameRole": "สี่ปั้ว",
-      "permission": {
-        "delegator": true, // ตัวแทน
-        "importLottery": true, // สลาก
-        "financeReport": true, // การเงิน
-        "contentMarketing": true, // สื่อสาร
-        "report": true, // รายงาน
-        "createAdmin": true // สร้างผู้ดูแล
-      }
-    },
-    {
-      "nameRole": "โหงวปั้ว",
-      "permission": {
-        "delegator": true, // ตัวแทน
-        "importLottery": true, // สลาก
-        "financeReport": true, // การเงิน
-        "contentMarketing": true, // สื่อสาร
-        "report": true, // รายงาน
-        "createAdmin": true // สร้างผู้ดูแล
-      }
-    }
-  ],
-
-  // Role Admin
-  "roleAdmin": [
-    {
-      "nameRole": "ยี่ปั้ว", // PK
-      "permission": {
-        "delegator": true, // ตัวแทน
-        "importLottery": true, // สลาก
-        "financeReport": true, // การเงิน
-        "contentMarketing": true, // สื่อสาร
-        "report": true, // รายงาน
-        "createAdmin": true // สร้างผู้ดูแล
-      }
-    }
-  ]
 }
 ```
 
