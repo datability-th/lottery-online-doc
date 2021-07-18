@@ -4,9 +4,76 @@
 
 ....
 
-# Database
+# Database (Schema)
 
-## 1. Registration and Login
+## 1. User
+
+**Part #1** : Search a latest shop with `shopFriendLatest`.
+
+สามารถค้นหา Shop ที่ล่าสุด ของลูกค้าเลือก เนื่องจากแต่ละ shop จะมี Credit ไม่เท่ากันดังนั้นการเลือก shop จึงสำคัญ โดย Algorithm ต้องเอา `shopID` ไปค้นหาใน `Shop Table` โดยใช้ `shopInfo` ในการดูรายละเอียดของ Shop
+
+**Part #2** : Search a list shop of user with `shopFriend`.
+
+เมื่อค้นหา ShopFriend จะต้องไปดึงข้อมูลของ Quota จาก `shopQuota`
+
+**Part #3** : Add a friend with `addShopFriend`.
+
+เพิ่มเพื่อนกับร้านค้า โดยใช้ `shopInfo` เพื่อตรวจสอบว่ามีร้านค้านี้มั้ย ถ้ามีก็เพิ่มเข้าไปใน shopFriend ของ User เลย
+
+### Backend Logical Return Value Shop Schema
+
+```typescript
+{
+  "phoneNumber": "0962963233", // PK
+  "bankCompanyAbbreviation": "KBANK",
+  "bankNumber": "72093208283",
+  "name": "ภราดร",
+  "surname": "ศรีชาพันธุ์",
+  "roleType": "ลูกค้า", // ลูกค้า / ตัวแทน / admin
+  "roleClass": "ลูกค้า", // ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
+
+  "shopLatest": "096254374", // phoneNumber
+  "shopFriend": [
+    {
+      "phoneNumber": "096254374",
+      "shopID": "2xji1s"
+    },
+    {
+      "phoneNumber": "096254374",
+      "shopID": "2xji1s"
+    }
+    // ...
+  ],
+
+  "permissionAdmin": {
+    "delegator": false, // ตัวแทน
+    "importLottery": false, // สลาก
+    "financeReport": false, // การเงิน
+    "contentMarketing": false, // สื่อสาร
+    "report": false, // รายงาน
+    "createAdmin": false // สร้างผู้ดูแล
+  },
+
+  "createdAt": "2021-07-16T10:13:32+00:00",
+  "updatedAt": "2021-07-16T10:13:32+00:00"
+}
+```
+
+Logically, a User
+
+```typescript
+type Query {
+  shopFriendLatest(lotDate: Date!, phoneNumber: String, shopFriendPhoneNumber: String): Shop!
+  shopFriend(lotDate: Date!, phoneNumber: String): [Shop]!
+}
+
+type Mutation {
+  addShopFriend(input: AddLotteryInput!): User!
+  // createLottery(input: CreateLotteryInput!): Lottery!
+  // updateLottery(input: UpdateLotteryInput!): Lottery!
+  // deleteLottery(input: DeleteLotteryInput!): Lottery!
+}
+```
 
 ## 2. Bank
 
@@ -26,7 +93,7 @@
 }
 ```
 
-## 2. Lot of Lottery
+## 3. Lot of Lottery
 
 ```typescript
 {
@@ -44,7 +111,13 @@
 }
 ```
 
-## 3. Shop
+## 4. Shop
+
+**Part #1** : Search a information of shop with `shopInfo`.
+
+สามารถค้นหาข้อมูล Shop
+
+### Backend Logical Return Value Shop Schema
 
 ```typescript
 {
@@ -100,7 +173,22 @@
 }
 ```
 
-## 4. Quota of shop (Transaction)
+Logically, a Shop
+
+```typescript
+type Query {
+  shopInfo(lotDate: Date!, phoneNumber: String): Shop!
+}
+
+type Mutation {
+  // updateLottery(input: UpdateLotteryInput!): Lottery!
+  // deleteLottery(input: DeleteLotteryInput!): Lottery!
+}
+```
+
+## 5. Quota of shop (Transaction)
+
+**Part #1** : summary a total quota of shop with `shopQuota`.
 
 ```typescript
 {
@@ -127,9 +215,31 @@
 }
 ```
 
-## 4. Lottery
+Logically, a Quota
 
-<!-- Import lottery: How do you tracking ? -->
+```typescript
+type Query {
+  shopQuota(lotDate: Date!, phoneNumber: String): SummaryQuota!
+}
+
+type Mutation {
+  // createLottery(input: CreateLotteryInput!): Lottery!
+  // updateLottery(input: UpdateLotteryInput!): Lottery!
+  // deleteLottery(input: DeleteLotteryInput!): Lottery!
+}
+```
+
+## 6. Lottery
+
+There are 4 main flows of the Project process.
+
+#### 6.1 Lottery
+
+**Part #1** : Search a lottery with `searchLottery`.
+
+สามารถค้นหา lottery ที่ต้องการได้ตาม Digit รวมถึงถ้าเลขซ้ำกัน แต่คนละชุด (lotterySeries) ให้ Backend รวมเป็นชุดมาให้เลย
+
+### Backend Logical Return Value Lottery Schema
 
 ```typescript
 {
@@ -212,7 +322,21 @@
 }
 ```
 
-## 4. Cart
+Logically, a LotDate has many Lottery's.
+
+```typescript
+type Query {
+  searchLottery(lotDate: Date!, isSoldOut: Boolean, digit1: String, digit2: String, digit3: String, digit4: String, digit5: String, digit6: String, filter: { all: Boolean, double: Boolean, triple: Boolean, quadruple: Boolean }): [Lottery]!
+}
+
+type Mutation {
+  // createLottery(input: CreateLotteryInput!): Lottery!
+  // updateLottery(input: UpdateLotteryInput!): Lottery!
+  // deleteLottery(input: DeleteLotteryInput!): Lottery!
+}
+```
+
+## 7. Cart
 
 ```typescript
 {
@@ -278,7 +402,7 @@
 }
 ```
 
-## 5. Order of lottery (Transaction)
+## 8. Order of lottery (Transaction)
 
 ```typescript
 {
@@ -345,45 +469,7 @@
 }
 ```
 
-## 2. Users
-
-```typescript
-{
-  "phoneNumber": "0962963233", // PK
-  "bankCompanyAbbreviation": "KBANK",
-  "bankNumber": "72093208283",
-  "name": "ภราดร",
-  "surname": "ศรีชาพันธุ์",
-  "roleType": "ลูกค้า", // ลูกค้า / ตัวแทน / admin
-  "roleClass": "ลูกค้า", // ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
-
-  "shopFriend": [
-    {
-      "phoneNumber": "096254374",
-      "shopID": "2xji1s"
-    },
-    {
-      "phoneNumber": "096254374",
-      "shopID": "2xji1s"
-    }
-    // ...
-  ],
-
-  "permissionAdmin": {
-    "delegator": false, // ตัวแทน
-    "importLottery": false, // สลาก
-    "financeReport": false, // การเงิน
-    "contentMarketing": false, // สื่อสาร
-    "report": false, // รายงาน
-    "createAdmin": false // สร้างผู้ดูแล
-  },
-
-  "createdAt": "2021-07-16T10:13:32+00:00",
-  "updatedAt": "2021-07-16T10:13:32+00:00"
-}
-```
-
-## 4. Complain
+## 9. Complain
 
 ```typescript
 {
@@ -414,7 +500,7 @@
 }
 ```
 
-## 3. Permission (User Role)
+## 10. Permission (User Role)
 
 ```typescript
 {
@@ -434,20 +520,6 @@
 ```
 
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------- -->
-
-# Back Office
-
-## 1. Admin
-
-```typescript
-{
-  "userID": "user01",
-  "username": "0962963233",
-  "password": "KBANK",
-  "name": "ภราดร",
-  "surname": "ศรีชาพันธุ์"
-}
-```
 
 ## 5. Lottery can get reward
 

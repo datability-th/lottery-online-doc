@@ -2,6 +2,8 @@
 
 # About
 
+This project is the backend for Lottery Online.
+
 ....
 
 # Flow
