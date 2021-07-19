@@ -10,7 +10,7 @@
 
 **Part #1** : Search a latest shop with `shopFriendLatest`.
 
-สามารถค้นหา Shop ที่ล่าสุด ของลูกค้าเลือก เนื่องจากแต่ละ shop จะมี Credit ไม่เท่ากันดังนั้นการเลือก shop จึงสำคัญ โดย Algorithm ต้องเอา `shopID` ไปค้นหาใน `Shop Table` โดยใช้ `shopInfo` ในการดูรายละเอียดของ Shop
+สามารถค้นหา Shop ที่ล่าสุด ของลูกค้าเลือก เนื่องจากแต่ละ shop จะมี quota ไม่เท่ากันดังนั้นการเลือก shop จึงสำคัญ โดย Algorithm ต้องเอา `shopID` ไปค้นหาใน `Shop Table` โดยใช้ `shopInfo` ในการดูรายละเอียดของ Shop
 
 **Part #2** : Search a list shop of user with `shopFriend`.
 
@@ -22,17 +22,17 @@
 
 ### Backend Logical Return Value Shop Schema
 
-```typescript
+```json
 {
-  "phoneNumber": "0962963233", // PK
+  "roleType": "ลูกค้า", // PK ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
+  "ีuserID": "1pfhes9biiur5lidlpi6cdpt5j", // SK
+  "phoneNumber": "0962963233",
   "bankCompanyAbbreviation": "KBANK",
   "bankNumber": "72093208283",
   "name": "ภราดร",
   "surname": "ศรีชาพันธุ์",
-  "roleType": "ลูกค้า", // ลูกค้า / ตัวแทน / admin
-  "roleClass": "ลูกค้า", // ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
 
-  "shopLatest": "096254374", // phoneNumber
+  "shopLatest": "2xji1s", // phoneNumber
   "shopFriend": [
     {
       "phoneNumber": "096254374",
@@ -45,14 +45,14 @@
     // ...
   ],
 
-  "permissionAdmin": {
-    "delegator": false, // ตัวแทน
-    "importLottery": false, // สลาก
-    "financeReport": false, // การเงิน
-    "contentMarketing": false, // สื่อสาร
-    "report": false, // รายงาน
-    "createAdmin": false // สร้างผู้ดูแล
-  },
+  "permissionAdmin": [
+    "delegator",
+    "importLottery",
+    "financeReport",
+    "contentMarketing",
+    "report",
+    "createAdmin"
+  ],
 
   "createdAt": "2021-07-16T10:13:32+00:00",
   "updatedAt": "2021-07-16T10:13:32+00:00"
@@ -77,12 +77,12 @@ type Mutation {
 
 ## 2. Bank
 
-```typescript
+```json
 {
   "bank": [
     {
       "bankCompanyAbbreviation": "SCB", // PK
-      "bankCompany": "ไทยพาณิชย์ (Siam Commercial Bank)" // SK
+      "bankCompany": "ไทยพาณิชย์ (Siam Commercial Bank)"
     },
     {
       "bankCompanyAbbreviation": "KBANK",
@@ -95,7 +95,7 @@ type Mutation {
 
 ## 3. Lot of Lottery
 
-```typescript
+```json
 {
   "lot": [
     {
@@ -117,14 +117,18 @@ type Mutation {
 
 สามารถค้นหาข้อมูล Shop
 
+**Part #2** : List a shop with `shopInfo`.
+
+รายการตัวแทน
+
 ### Backend Logical Return Value Shop Schema
 
-```typescript
+```json
 {
   "shop": [
     {
       // User
-      "phoneNumber": "096254374", // PK เบอร์โทร
+      "userID": "1pfhes9biiur5lidlpi6cdpt5j", // PK เบอร์โทร
 
       // Shop
       "shopID": "2xji1s", // SK รหัสตัวแทน
@@ -133,8 +137,7 @@ type Mutation {
       "email": "donut@gmail.com",
       "idCard": "1100900984382", // เลขบัตรประชาชน
       "idCardImg": "https://s3.amazonaws.com/bucketname/foldername/imagename_idcard.jpg", // เลขบัตรประชาชน
-      "roleShop": "ยี่ปั้ว", // ชื่อธนาคาร Relation with `Role of seller Table`
-      "upline": "<phoneNumber>", // Upline's Hierarchy Relation with `User Table`
+      "upline": "<userID>", // Upline's Hierarchy Relation with `User Table`
 
       // Shop Bank
       "bankCompanyAbbreviation": "SCB", // ชื่อธนาคาร Relation with `Bank Table`
@@ -145,8 +148,8 @@ type Mutation {
       "sociallineID": "@lottoonline", // Line
 
       // Quota
-      "quotaType": "", // ประเภทโควต้า - โควต้าขายขาด, โควต้าลอย
-      "creditType": "", // รูปแบบเครดิต - โอนขาด, ไม่จำกัด
+      "quotaType": "โควต้าขายขาด", // ประเภทโควต้า - โควต้าขายขาด, โควต้าลอย
+      "quotaClass": "โอนขาด", // รูปแบบเครดิต - โอนขาด, ไม่จำกัด
       "hasShop": true, // true: มี, false: ไม่มี
 
       "officeHours": {
@@ -157,6 +160,19 @@ type Mutation {
         "fri": { "startTime": "08.00", "endTime": "17.00" },
         "sat": { "startTime": "08.00", "endTime": "17.00" },
         "sun": { "startTime": "08.00", "endTime": "17.00" }
+      },
+
+      "feeLottery": {
+        "amountOne": 20,
+        "amountTwo": 20,
+        "amountThree": 40,
+        "amountFour": 40,
+        "amountFive": 40,
+        "amountSix": 40,
+        "amountSeven": 40,
+        "amountEight": 40,
+        "amountNine": 40,
+        "amountTen": 40
       },
 
       // Status
@@ -178,11 +194,14 @@ Logically, a Shop
 ```typescript
 type Query {
   shopInfo(lotDate: Date!, phoneNumber: String): Shop!
+  shopInfoList(lotDate: Date!, roleClass: String): [Shop]!
+  shopInfoListHierarchy(lotDate: Date!, parentPhoneNumber: String): [Shop]!
 }
 
 type Mutation {
-  // updateLottery(input: UpdateLotteryInput!): Lottery!
-  // deleteLottery(input: DeleteLotteryInput!): Lottery!
+  createShop(input: CreateShopInput!): Shop!
+  updateShop(input: UpdateShopInput!): Shop!
+  deleteShop(input: DeleteShopInput!): Shop!
 }
 ```
 
@@ -190,7 +209,7 @@ type Mutation {
 
 **Part #1** : summary a total quota of shop with `shopQuota`.
 
-```typescript
+```json
 {
   "transactionQuota": [
     {
@@ -205,7 +224,6 @@ type Mutation {
       "shopReceiverID": "2xji1s",
       "nameReceiver": "ภราดร",
       "surnameReceiver": "ศรีชาพันธุ์",
-      "quota": 2000.0,
 
       "createdAt": "2021-07-16T10:13:32+00:00", // Datetime
       "updatedAt": "2021-07-16T10:13:32+00:00"
@@ -241,7 +259,7 @@ There are 4 main flows of the Project process.
 
 ### Backend Logical Return Value Lottery Schema
 
-```typescript
+```json
 {
   "lottery": [
     {
@@ -338,7 +356,7 @@ type Mutation {
 
 ## 7. Cart
 
-```typescript
+```json
 {
   "cart": [
     {
@@ -404,7 +422,7 @@ type Mutation {
 
 ## 8. Order of lottery (Transaction)
 
-```typescript
+```json
 {
   "transactionOrder": [
     {
@@ -471,7 +489,7 @@ type Mutation {
 
 ## 9. Complain
 
-```typescript
+```json
 {
   "listComplain": [
     {
@@ -502,7 +520,7 @@ type Mutation {
 
 ## 10. Permission (User Role)
 
-```typescript
+```json
 {
   // Role Shop
   "userRole": [
@@ -523,21 +541,18 @@ type Mutation {
 
 ## 5. Lottery can get reward
 
-```typescript
-{
-}
+```json
+{}
 ```
 
 ## 5. Reward
 
-```typescript
-{
-}
+```json
+{}
 ```
 
 ## 6. Commission
 
-```typescript
-{
-}
+```json
+{}
 ```
