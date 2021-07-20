@@ -20,42 +20,47 @@
 
 เพิ่มเพื่อนกับร้านค้า โดยใช้ `shopInfo` เพื่อตรวจสอบว่ามีร้านค้านี้มั้ย ถ้ามีก็เพิ่มเข้าไปใน shopFriend ของ User เลย
 
-### Backend Logical Return Value Shop Schema
+### Backend Logical Return Value User Schema
 
 ```json
 {
-  "roleType": "ลูกค้า", // PK ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
-  "ีuserID": "1pfhes9biiur5lidlpi6cdpt5j", // SK
-  "phoneNumber": "0962963233",
-  "bankCompanyAbbreviation": "KBANK",
-  "bankNumber": "72093208283",
-  "name": "ภราดร",
-  "surname": "ศรีชาพันธุ์",
+  "user": [
+    {
+      "roleType": "ลูกค้า", // PK ลูกค้า / ยี่ปั้ว / ซาปั้ว / สี่ปั้ว / โหงวปั้ว / admin
+      "ีuserID": "1pfhes9biiur5lidlpi6cdpt5j", // SK
+      "phoneNumber": "0962963233",
+      "bankCompanyAbbreviation": "KBANK",
+      "bankNumber": "72093208283",
+      "name": "ภราดร",
+      "surname": "ศรีชาพันธุ์",
 
-  "shopLatest": "2xji1s", // phoneNumber
-  "shopFriend": [
-    {
-      "phoneNumber": "096254374",
-      "shopID": "2xji1s"
-    },
-    {
-      "phoneNumber": "096254374",
-      "shopID": "2xji1s"
+      "shopLatest": "2xji1s", // phoneNumber
+      "shopFriend": [
+        {
+          "ีuserID": "1pfhes9biiur5lidlpi6cdpt5j",
+          "shopID": "2xji1s"
+        },
+        {
+          "ีuserID": "1pfhes9biiur5lidlpi6cdpt5j",
+          "shopID": "2xji1s"
+        }
+        // ...
+      ],
+
+      "permissionAdmin": [
+        "delegator",
+        "importLottery",
+        "financeReport",
+        "contentMarketing",
+        "report",
+        "createAdmin"
+      ],
+
+      "createdAt": "2021-07-16T10:13:32+00:00",
+      "updatedAt": "2021-07-16T10:13:32+00:00"
     }
     // ...
-  ],
-
-  "permissionAdmin": [
-    "delegator",
-    "importLottery",
-    "financeReport",
-    "contentMarketing",
-    "report",
-    "createAdmin"
-  ],
-
-  "createdAt": "2021-07-16T10:13:32+00:00",
-  "updatedAt": "2021-07-16T10:13:32+00:00"
+  ]
 }
 ```
 
@@ -97,7 +102,7 @@ type Mutation {
 
 ```json
 {
-  "lot": [
+  "lotLottery": [
     {
       "lotDate": "2021-05-16", // PK YYYY-MM-DD 16 พฤษภาคม 2564
       "lotDescription": "19" // SK งวดที่
@@ -132,6 +137,7 @@ type Mutation {
 
       // Shop
       "shopID": "2xji1s", // SK รหัสตัวแทน
+      "shopName": "ชื่อร้าน", // ชื่อร้าน
       "name": "ภราดร",
       "surname": "ศรีชาพันธุ์",
       "email": "donut@gmail.com",
@@ -177,6 +183,7 @@ type Mutation {
 
       // Status
       "isOpen": true, // true: Open, false: Close
+      "isSoldOut": false, // true: หมดแผง, false: ขายต่อ
       "isVerified": true, // true: Verified, false: Not verified
 
       // Time
@@ -214,7 +221,7 @@ type Mutation {
   "transactionQuota": [
     {
       "lotDate": "2021-05-16", // PK YYYY-MM-DD งวด 16 พฤษภาคม 2564
-
+      "quota": 200.0,
       // Sender
       "shopSenderID": "2xji1s", // SK รหัสตัวแทน
       "nameSender": "ภราดร",
@@ -307,7 +314,7 @@ There are 4 main flows of the Project process.
       // Status
       "isSoldOut": false, // true:SOLD OUT, false: Available
       "isWon": false, // true:Won, false: Not won
-      "orderNo": "11312624917052", // Relative Order of lottery (Transaction) Table
+      "orderNo": "", // Relative Order of lottery (Transaction) Table
 
       "getMoney": {
         "getType": true, // เลือกวิธีรับรางวัล- true: รับด้วยตนเองที่บริษัท, false: รับโดยวิธีการโอน (fee 2%)
@@ -358,7 +365,7 @@ type Mutation {
 
 ```json
 {
-  "cart": [
+  "shoppingCart": [
     {
       "lotDate": "2021-05-16", // PK YYYY-MM-DD 16 พฤษภาคม 2564
       "orderNo": "11312624917052", // SK หมายเลขออเดอร์
@@ -378,7 +385,7 @@ type Mutation {
       "sellerName": "",
       "sellerSurname": "",
       "sellerPhoneNumber": "",
-      "SellerSociallineID": "@lottoonline", // Line
+      "sellerSociallineID": "@lottoonline", // Line
 
       // Status
       "statusOrder": "การสั่งซื้อเสร็จสมบูรณ์",
@@ -493,13 +500,13 @@ type Mutation {
 {
   "listComplain": [
     {
-      "phoneNumber": "096254374",
+      "userID": "1pfhes9biiur5lidlpi6cdpt5j",
 
-      "titleComplain": "096254374", // ชื่อเรื่องร้องเรียน
+      "titleComplain": "", // ชื่อเรื่องร้องเรียน
       "nameComplainer": "", // ชื่อผู้ร้องเรียน
-      "complainType": "096254374", // หัวข้อร้องเรียน
+      "complainType": "", // หัวข้อร้องเรียน
       "phoneNumberComplainer": "096254374", // เบอร์โทรผู้ร้องเรียน
-      "emailComplainer": "096254374", // อีเมล์ผู้ร้องเรียน
+      "emailComplainer": "", // อีเมล์ผู้ร้องเรียน
       "descriptionComplain": "", // รายละเอียด....
 
       "locationImg": [
@@ -509,6 +516,8 @@ type Mutation {
         }
         // ...
       ],
+
+      "status": "OK", // OK / Failed
 
       "createdAt": "2021-07-16T10:13:32+00:00",
       "updatedAt": "2021-07-16T10:13:32+00:00"
