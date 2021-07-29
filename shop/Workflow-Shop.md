@@ -16,6 +16,191 @@ Filter: ทั้งหมด / ชุด 2 ใบ / ชุด 3 ใบ / ชุ
 
 Note: การที่จะมี lottery ขึ้นมาต้องมีการ add ร้านค้าอย่างน้อย 1 ร้าน ก็จะสามารถหา lottery ทั้งหมดที่มีใน platform ได้ โดยถ้าปัดไปทางขวา `ข้อมูลผู้ขาย` จะเป็นรายละเอียดของร้านค้าที่เปิดล่าสุด
 
+#### 1.1 lotLotteryCurrent:
+
+ดึงข้อมูล Lot of Lottery ล่าสุด แล้วนำ LotID ไปใช้เพื่อ Filter Lottery ต่อ
+
+- Query
+
+```javascript
+query {
+  lotLotteryCurrent {
+    lotID
+    lotDate
+    lotDescription
+  }
+}
+```
+
+#### 1.2 userShopLatest:
+
+ถ้าหาก Login แล้วนำ `userID` ไปดึงข้อมูล `shopLatest` จาก `userInfo`
+
+\*Note `shopLatest` = `shopID`
+
+- Query
+
+```javascript
+query($userID: ID!) {
+  userInfo(userID: $userID)  {
+    roleType
+  	userID
+    phoneNumber
+    bankCompanyAbbreviation
+    bankNumber
+    name
+    surname
+    shopLatest
+    shopFriend {
+      userID
+      shopID
+    }
+    permissionAdminList
+    shopID
+    hasShop
+    isOpen
+    isSoldOut
+    isVerifyOTP
+  }
+}
+```
+
+- Query Variables
+
+```json
+{
+  "userID": "donut"
+}
+```
+
+#### 1.3 searchLottery
+
+สามารถ Filter โดยไม่ต้องมี `roleType` ก็ไก้
+
+- Query
+
+```javascript
+query($input: FilterLotteryInput!) {
+  lotteryAvailable(input: $input)  {
+    lotID
+    lotteryUniqueList {
+      lotteryNo
+      amount
+      locationImg {
+        filename
+        full
+        mini
+      }
+      lotterySeriesList{
+        lotteryID
+        lotterySeries
+      }
+    }
+    nextPageToken
+    limit
+  }
+}
+```
+
+- Query Variables
+
+input FilterLotteryInput {}
+
+```json
+{
+  "input": {
+    "lotDateID": "2021-05-16",
+    "digit1": "1",
+    "digit2": "2",
+    "digit3": "3",
+    "digit4": "4",
+    "digit5": "5",
+    "digit6": "6",
+    "isSoldOut": false,
+    "all": true,
+    "double": false,
+    "triple": false,
+    "quadruple": false,
+    "nextPageToken": "",
+    "limit": -1
+  }
+}
+```
+
+#### 1.4 shopLatestInfo
+
+ถ้าหาก Login แล้วนำ `shopLatest.userID` ไปดึงข้อมูล `shopInfo` จาก `userInfo`
+
+:: ส่วนตรวจสอบสถานะว่าร้านค้าเปิด คือ `isOpen` - `True:เปิดร้่าน`, `False:ปิดร้าน`
+
+:: ส่วนตรวจสอบสถานะว่าร้านค้า lottery หมดแผง หรือไม่ คือ `isSoldOut` - `True:หมดแผง`, `False:ไม่หมดแผง`
+
+:: ส่วนตรวจสอบสถานะว่าร้านค้าได้่รับการยืนยันตัวตนแล้ว คือ `isVerifyOTP` - `True:ยืนยันตัวตนแล้ว`, `False:ยังไม่ได้รับการยืนยันตัวตนแล้ว`
+
+- Query
+
+```javascript
+query($userID: ID!) {
+  userInfo(userID: $userID)  {
+    roleType
+  	userID
+    shopID
+    shopInfo {
+      shopName
+      name
+      surname
+      email
+      bankCompanyAbbreviation
+      bankNumber
+      socialFacebookID
+      sociallineID
+      officeHours {
+        mon {
+          startTime
+          endTime
+        }
+        tue {
+          startTime
+          endTime
+        }
+        wed {
+          startTime
+          endTime
+        }
+        thu {
+          startTime
+          endTime
+        }
+        fri {
+          startTime
+          endTime
+        }
+        sat {
+          startTime
+          endTime
+        }
+        sun {
+          startTime
+          endTime
+        }
+      }
+    }
+    hasShop
+    isOpen
+    isSoldOut
+    isVerifyOTP
+  }
+}
+```
+
+- Query Variables
+
+```json
+{
+  "userID": "donut"
+}
+```
+
 ![searchLottery](./images/searchLottery.png)
 
 - _ทั้งหมด_ : show lottery ทุกใบโดยแบ่งทั้ง 1 ใบ, 2 ใบ, 3 ใบ, 4 ใบ, 5 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
@@ -35,6 +220,8 @@ Note: การที่จะมี lottery ขึ้นมาต้องม�
 
 - Credit ในการซื้อ Lottery
 - Fee ค่าบริการที่แตกต่างกัน
+
+ถ้าหาก Login แล้วนำ `userID` ไปดึงข้อมูล `shopFriend` จาก `userInfo`
 
 ![addShop](./images/addShop.png)
 
