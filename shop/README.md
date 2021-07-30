@@ -227,11 +227,64 @@ query($userID: ID!) {
 
 ถ้าหาก Login แล้วนำ `userID` ไปดึงข้อมูล `shopFriend` จาก `userInfo`
 
+- Query
+
+```javascript
+mutation($input: AddShopFriendInput!) {
+  addShopFriend(input: $input) {
+    userID
+    shopID
+    shopInfo{
+      shopName
+      hasShop
+      isOpen
+    }
+  }
+}
+```
+
+- Query Variable
+
+```json
+{
+  "input": {
+    "shopID": "2xji1s"
+  }
+}
+```
+
 ![addShop](./images/addShop.png)
 
 ## 5. Complaint
 
 แจ้งเรื่องร้องเรียน
+
+- Query
+
+```javascript
+mutation($input: CreateComplaintInput!) {
+  createComlaint(input: $input) {
+    complaintID
+  }
+}
+```
+
+- Query Variable
+
+```json
+{
+  "input": {
+    "userID": "D202107250001",
+    "name": "D202107250001",
+    "complaintTopic": "ERROR",
+    "phoneNumber": "D202107250001",
+    "email": "D202107250001",
+    "note": "D202107250001",
+    "locationImg": "D202107250001"
+  }
+}
+```
+
 ![complaint](./images/complaint.png)
 
 ## 6. Shopping Cart (Real Time)
