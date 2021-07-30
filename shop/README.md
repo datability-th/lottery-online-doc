@@ -8,13 +8,9 @@ This project is the backend for Lottery Online.
 
 # Flow
 
-## 1. Search lottery
+## 1. Initial for open app
 
-Input : 6 digit for search. (\_ \_ \_ \_ \_ \_)
-
-Filter: ทั้งหมด / ชุด 2 ใบ / ชุด 3 ใบ / ชุด 4 ใบ (default: ทั้งหมด)
-
-Note: การที่จะมี lottery ขึ้นมาต้องมีการ add ร้านค้าอย่างน้อย 1 ร้าน ก็จะสามารถหา lottery ทั้งหมดที่มีใน platform ได้ โดยถ้าปัดไปทางขวา `ข้อมูลผู้ขาย` จะเป็นรายละเอียดของร้านค้าที่เปิดล่าสุด
+\*Note: ต้องไปดึงข้อมูลของ Credits ของร้านล่าสุดด้วย
 
 #### 1.1 lotLotteryCurrent:
 
@@ -73,9 +69,15 @@ query($userID: ID!) {
 }
 ```
 
-#### 1.3 searchLottery
+## 2. Search lottery
 
-สามารถ Filter โดยไม่ต้องมี `roleType` ก็ไก้
+Input : 6 digit for search. (\_ \_ \_ \_ \_ \_)
+
+Filter: ทั้งหมด / ชุด 2 ใบ / ชุด 3 ใบ / ชุด 4 ใบ (default: ทั้งหมด)
+
+Note: การที่จะมี lottery ขึ้นมาต้องมีการ add ร้านค้าอย่างน้อย 1 ร้าน ก็จะสามารถหา lottery ทั้งหมดที่มีใน platform ได้ โดยถ้าปัดไปทางขวา `ข้อมูลผู้ขาย` จะเป็นรายละเอียดของร้านค้าที่เปิดล่าสุด
+
+#### 2.1 searchLottery
 
 - Query
 
@@ -109,7 +111,7 @@ input FilterLotteryInput {}
 ```json
 {
   "input": {
-    "lotDateID": "2021-05-16",
+    "lotID": "2021-05-16",
     "digit1": "1",
     "digit2": "2",
     "digit3": "3",
@@ -127,7 +129,19 @@ input FilterLotteryInput {}
 }
 ```
 
-#### 1.4 shopLatestInfo
+![searchLottery](./images/searchLottery.png)
+
+- _ทั้งหมด_ : show lottery ทุกใบโดยแบ่งทั้ง 1 ใบ, 2 ใบ, 3 ใบ, 4 ใบ, 5 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
+
+- _ชุด 2 ใบ_ : show lottery เฉพาะชุด 2 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
+
+- _ชุด 3 ใบ_ : show lottery เฉพาะชุด 3 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
+
+- _ชุด 4 ใบ_ : show lottery เฉพาะชุด 4 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
+
+## 3. Information of Shop Latest
+
+#### 3.1 shopLatestInfo
 
 ถ้าหาก Login แล้วนำ `shopLatest.userID` ไปดึงข้อมูล `shopInfo` จาก `userInfo`
 
@@ -201,20 +215,10 @@ query($userID: ID!) {
 }
 ```
 
-![searchLottery](./images/searchLottery.png)
-
-- _ทั้งหมด_ : show lottery ทุกใบโดยแบ่งทั้ง 1 ใบ, 2 ใบ, 3 ใบ, 4 ใบ, 5 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
-
-- _ชุด 2 ใบ_ : show lottery เฉพาะชุด 2 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
-
-- _ชุด 3 ใบ_ : show lottery เฉพาะชุด 3 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
-
-- _ชุด 4 ใบ_ : show lottery เฉพาะชุด 4 ใบ (ถ้าเป็นชุด ก็ใส่ สัญลักษณ์ ไปในรูป lottery ด้วย)
-
 ถ้าหากรัานปิด หรือ หมดแผงต้องแสดงดังนี้
 ![closeShop](./images/closeShop.png)
 
-## 2. Add Shop
+## 4. Add Shop
 
 เพิ่มร้านค้าเพื่อที่จะซื้อ Lottery โดยการมีร้านค้าหลายๆ ร้านจะได้ benefit ที่แตกต่างกัน ได้แก่
 
@@ -225,12 +229,12 @@ query($userID: ID!) {
 
 ![addShop](./images/addShop.png)
 
-## 3. Complaint
+## 5. Complaint
 
 แจ้งเรื่องร้องเรียน
 ![complaint](./images/complaint.png)
 
-## 4. Shopping Cart (Real Time)
+## 6. Shopping Cart (Real Time)
 
 เมื่อเลือก lottery ใส่ `ตะกร้า` ระบบจะต้องทำการ ตรวจสอบว่า lottery นั้นๆ มีการซื้อหรือยัง ? (Real-time) ซึ่งเราจะ `จอง lottery` ก็ต่อเมื่อ ไปถึงหน้า `แจ้งการชำระเงิน หรือ มี หมายเลขออเดอร์` ขึ้นแล้ว **ซึ่ง _Credit ของผู้ขายก็ยังไม่ถูกตัด_**
 
@@ -264,17 +268,17 @@ query($userID: ID!) {
 
 ![cart](./images/cart.png)
 
-## 5. Register & Login with OTP
+## 7. Register & Login with OTP
 
 ...TODO... (Dev)
 
-## 6. Confirm Payment
+## 8. Confirm Payment
 
 ถ้าหากเข้ามาถึงหน้า "แจ้งการชำระเงิน" แล้ว lottery ทั้งหมดจะถูกจอง แล้วจะมีการนับเวลาถอยหลังเป็นเวลา 1 ชั่วโมง และจะตัด Credit ของผู้ขาย คนนั้นๆ
 
 ![confirmPayment](./images/confirmPayment.png)
 
-## 7. Safe
+## 9. Safe
 
 ตู้เซฟสมาชิก จะมองเห็นในมุมมองของประวัติแบบต่างๆ
 
@@ -283,7 +287,7 @@ query($userID: ID!) {
 - ประวัติการถูกรางวัล
 - ข้อมูลสมาชิก
 
-### 7.1 งวดปัจจุบัน
+### 9.1 งวดปัจจุบัน
 
 สถานะ ของ Order
 
@@ -303,7 +307,7 @@ query($userID: ID!) {
 
 ![safeStatusLottery](./images/safeStatusLottery.png)
 
-### 7.2 ประวัติการถูกรางวัล
+### 9.2 ประวัติการถูกรางวัล
 
 สถานะ ของ Lottery ที่ถูกรางวัล
 
