@@ -53,9 +53,6 @@ query($userID: ID!) {
     }
     permissionAdminList
     shopID
-    hasShop
-    isOpen
-    isSoldOut
     isVerifyOTP
   }
 }
@@ -198,10 +195,10 @@ query($userID: ID!) {
           endTime
         }
       }
+      hasShop
+      isOpen
+      isSoldOut
     }
-    hasShop
-    isOpen
-    isSoldOut
     isVerifyOTP
   }
 }
@@ -319,6 +316,97 @@ mutation($input: CreateComplaintInput!) {
 
 เลือกซื้อได้ `1` ใบ
 
+- Query
+
+Create order
+
+```javascript
+mutation($input: CreateOrderInput!) {
+  createOrder(input: $input) {
+    lotID
+    orderNo
+    lottery {
+      lotteryID
+      lotteryNo
+      lotterySeries
+
+      price
+      fee
+      isSoldOut
+    }
+  }
+}
+```
+
+Update order
+
+```javascript
+mutation($input: UpdateOrderInput!) {
+  updateOrder(input: $input) {
+    lotID
+    orderNo
+    lottery {
+      lotteryID
+      lotteryNo
+      lotterySeries
+
+      price
+      fee
+      isSoldOut
+    }
+  }
+}
+```
+
+- Query Variable
+
+```json
+{
+  "input": {
+    "lotID": "2021-05-16_MjAyMS0wNS0xNg==",
+    "userID": "1pfhes9biiur5lidlpi6cdpt5j",
+
+    "phoneNumber": "0962963233",
+    "name": "ภราดร",
+    "surname": "ศรีชาพันธุ์",
+    "note": "",
+    "orderByRole": "CUSTOMER",
+
+    "sellerName": "นางฟ้า",
+    "sellerSurname": "สายลม",
+    "sellerPhoneNumber": "0962963233",
+    "SellerSociallineID": "@line",
+
+    "orderStatus": "WAITING_PAID",
+
+    "locationImgSlip": {
+      "filename": "",
+      "slip": ""
+    },
+
+    "lottery": [
+      {
+        "lotID": "2021-05-16_MjAyMS0wNS0xNg==",
+        "lotteryID": "123456_10",
+
+        "lotteryNo": "123456",
+        "lotterySeries": 10,
+        "locationImg": {
+          "filename": "64-19-10-151022.jpg",
+          "mini": "https://fingerprint-image.s3.ap-southeast-1.amazonaws.com/ex_lottery_mini.jpg",
+          "full": "https://fingerprint-image.s3.ap-southeast-1.amazonaws.com/ex_lottery_full.jpg"
+        },
+
+        "price": 80.0,
+        "fee": 20.0,
+
+        "isSoldOut": false
+      }
+    ]
+  }
+}
+```
+
 ![cart](./images/cart.png)
 
 ## 7. Register & Login with OTP
@@ -350,6 +438,38 @@ mutation($input: CreateComplaintInput!) {
 - **ยกเลิก** <span style="color:red">(สีแดง)</span>
 - **การสั่งซื้อเสร็จสมบูรณ์** <span style="color:green">(สีเขียว)</span>
 
+- Query
+
+```javascript
+query($userID: ID!) {
+  userInfo(userID: $userID)  {
+    roleType
+  	userID
+    phoneNumber
+    bankCompanyAbbreviation
+    bankNumber
+    name
+    surname
+    shopLatest
+    shopFriend {
+      userID
+      shopID
+    }
+    safePersonal{
+      orderID
+    }
+  }
+}
+```
+
+- Query Variables
+
+```json
+{
+  "userID": "donut"
+}
+```
+
 ![safeStatusOrder](./images/safeStatusOrder.png)
 
 สถานะ ของ Lottery
@@ -357,6 +477,47 @@ mutation($input: CreateComplaintInput!) {
 - ไม่ถูกรางวัล <span style="color:red">(สีแดง)</span>
 - ถูกรางวัล <span style="color:green">(สีเขียว)</span>
 - ไม่ได้ชำระเงิน <span style="color:gray">(สีเทา)</span>
+
+- Query
+
+```javascript
+query($lotID: String!, $userID: String, $orderNo: String) {
+  orderInfo(lotID: $lotID, userID: $userID, orderNo: $orderNo)  {
+    lotID
+    userID
+    note
+    orderByRole
+    orderStatus
+    locationImgSlip {
+      filename
+      slip
+    }
+    lottery {
+      lotteryID
+      lotteryNo
+      lotterySeries
+      locationImg {
+        filename
+        mini
+        full
+      }
+      price
+      fee
+      isSoldOut
+    }
+  }
+}
+```
+
+- Query Variables
+
+```json
+{
+  "lotID": "DATA",
+  "userID": "",
+  "orderNo": ""
+}
+```
 
 ![safeStatusLottery](./images/safeStatusLottery.png)
 
